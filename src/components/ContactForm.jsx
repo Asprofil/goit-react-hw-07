@@ -1,27 +1,31 @@
 import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { useDispatch } from 'react-redux';
+import { addContact } from '../redux/ContactsSlice';
 
-const validate = values => {
-  const errors = {};
-  if (!values.name) {
-    errors.name = 'Required';
-  } else if (values.name.length < 3) {
-    errors.name = 'Too Short!';
-  } else if (values.name.length > 50) {
-    errors.name = 'Too Long!';
-  }
+const ContactForm = () => {
+  const dispatch = useDispatch();
 
-  if (!values.number) {
-    errors.number = 'Required';
-  }
+  const validate = values => {
+    const errors = {};
+    if (!values.name) {
+      errors.name = 'Required';
+    } else if (values.name.length < 3) {
+      errors.name = 'Too Short!';
+    } else if (values.name.length > 50) {
+      errors.name = 'Too Long!';
+    }
 
-  return errors;
-};
+    if (!values.number) {
+      errors.number = 'Required';
+    }
 
-const ContactForm = ({ onAddContact, generateId }) => {
+    return errors;
+  };
+
   const handleSubmit = (values, { resetForm }) => {
-    const newContact = { ...values, id: generateId() };
-    onAddContact(newContact);
+    const newContact = { ...values, id: `id-${Date.now()}` };
+    dispatch(addContact(newContact));
     resetForm();
   };
 
